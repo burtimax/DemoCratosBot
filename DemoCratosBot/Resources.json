@@ -1,0 +1,12 @@
+{
+  "Introduction" : "Hello world!",
+  "NoSupportedMessage" : "Такое я не уменю сохранять",
+  "SendMeNoTextMessage" : "Пришли мне не текст",
+  "NeedApprove" : "Проверь сообщение ☝\uFE0F (ID = [{0}])",
+  "MessageApprovedByModerator" : "Принято (ID = [{0}])",
+  "MessageDeclinedByModerator" : "Отклонено (ID = [{0}])",
+  "MessageSaved" : "\uD83D\uDD25",
+  "ButtonNext" : "⏭",
+  "ButtonApprove" : "✅",
+  "ButtonDecline" : "\uD83D\uDEAB"
+}
