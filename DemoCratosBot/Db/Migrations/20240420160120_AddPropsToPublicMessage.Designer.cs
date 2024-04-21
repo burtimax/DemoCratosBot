@@ -3,6 +3,7 @@ using System;
 using DemoCratosBot.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DemoCratosBot.Db.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240420160120_AddPropsToPublicMessage")]
+    partial class AddPropsToPublicMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,46 +116,6 @@ namespace DemoCratosBot.Db.Migrations
                         .HasName("pk_public_messages");
 
                     b.ToTable("public_messages", "app");
-                });
-
-            modelBuilder.Entity("DemoCratosBot.Db.Entities.SendedMessagesToUserEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("id")
-                        .HasComment("Идентификатор сущности.");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<long>("PublicMessageId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("public_message_id");
-
-                    b.Property<int?>("TelegramMessageId")
-                        .HasColumnType("integer")
-                        .HasColumnName("telegram_message_id");
-
-                    b.Property<int?>("TelegramMessageThreadId")
-                        .HasColumnType("integer")
-                        .HasColumnName("telegram_message_thread_id");
-
-                    b.Property<DateTimeOffset?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id")
-                        .HasName("pk_sended_message_to_user");
-
-                    b.ToTable("sended_message_to_user", "app");
                 });
 
             modelBuilder.Entity("DemoCratosBot.Db.Entities.ChatMessageViewEntity", b =>

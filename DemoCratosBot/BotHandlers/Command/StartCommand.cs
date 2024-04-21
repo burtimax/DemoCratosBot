@@ -1,6 +1,10 @@
 ﻿using BotFramework.Attributes;
 using BotFramework.Base;
+using BotFramework.Extensions;
+using BotFramework.Other;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DemoCratosBot.BotHandlers.Command;
 
@@ -13,6 +17,16 @@ public class StartCommand : BaseDemoCratosCommand
 
     public override async Task HandleBotRequest(Update update)
     {
-        await Answer("Привет");
+        var savedMessage = await BotDbContext.SavedMessages.FirstOrDefaultAsync(m => m.Id == R.IntroductionSavedMessageId);
+
+        if (savedMessage is null)
+        {
+            await Answer(R.Introduction);
+            return;
+        }
+        
+        MarkupBuilder<ReplyKeyboardMarkup> reply = new();
+        reply.NewRow().Add(R.ButtonNext);
+        await BotClient.SendSavedMessage(Chat.ChatId, BotDbContext, R.IntroductionSavedMessageId, replyMarkup: reply.Build());
     }
 }

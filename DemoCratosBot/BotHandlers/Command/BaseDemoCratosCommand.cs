@@ -1,5 +1,6 @@
 ﻿using BotFramework.Base;
 using BotFramework.Enums;
+using BotFramework.Other;
 using DemoCratosBot.Resources;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
@@ -23,6 +24,13 @@ public class BaseDemoCratosCommand : BaseBotCommand
 
     protected Task Answer(string text, ParseMode parseMode = ParseMode.Html, IReplyMarkup replyMarkup = default)
     {
+        if (replyMarkup == default)
+        {
+            MarkupBuilder<ReplyKeyboardMarkup> reply = new();
+            reply.NewRow().Add(R.ButtonNext);
+            replyMarkup = reply.Build();
+        }
+        
         return BotClient.SendTextMessageAsync(Chat.ChatId, text, parseMode: parseMode, replyMarkup: replyMarkup);
     }
     

@@ -50,4 +50,11 @@ public class PublicMessageService
         db.PublicMessages.UpdateRange(messages);
         await db.SaveChangesAsync();
     }
+
+    public async Task<PublicMessageEntity?> GetPublicMessage(int telegramMessageId, int? telegramMessageThreadId)
+    {
+        return await db.PublicMessages.FirstOrDefaultAsync(m => m.TelegramMessageId == telegramMessageId 
+                                                                && m.TelegramMessageThreadId ==
+                                                                telegramMessageThreadId);
+    }
 }

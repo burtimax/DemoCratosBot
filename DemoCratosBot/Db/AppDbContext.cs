@@ -13,12 +13,13 @@ public class AppDbContext : DbContext
 
     public DbSet<ChatMessageViewEntity> MessageViews { get; set; }
     public DbSet<PublicMessageEntity> PublicMessages { get; set; }
-    
+    public DbSet<SendedMessagesToUserEntity> SendedMessagesToUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ChatMessageViewEntity>().ToTable("chat_message_views", AppSchema);
         modelBuilder.Entity<PublicMessageEntity>().ToTable("public_messages", AppSchema);
+        modelBuilder.Entity<SendedMessagesToUserEntity>().ToTable("sended_message_to_user", AppSchema);
         
         modelBuilder.SetAllToSnakeCase();
         modelBuilder.SetFilters();

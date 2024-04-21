@@ -50,7 +50,7 @@ public class StartState : BaseDemoCratosState
             await SendRandomSavedMessage();
             return;
         }
-
+        
         if (update.Message.Type == MessageType.Text)
         {
             await Answer(R.SendMeNoTextMessage);
@@ -59,10 +59,29 @@ public class StartState : BaseDemoCratosState
         
         // Сохраняем сообщение пользователя
         await SaveMessage(update.Message!);
-        await Answer(R.MessageSaved);
+        await SendRandomSavedMessage();
+
+        // if (update.Message.ReplyToMessage != null)
+        // {
+        //     Message repToMessage = update.Message.ReplyToMessage;
+        //     PublicMessageEntity? messageReply =
+        //         await _publicMessageService.GetPublicMessage(repToMessage.MessageId, repToMessage.MessageThreadId);
+        //
+        //     if (messageReply is not null)
+        //     {
+        //         await SendNotificationToUserAboutReply(messageReply);
+        //     }
+        // } 
         return;
     }
 
+    private async Task SendNotificationToUserAboutReply(PublicMessageEntity publicMessage)
+    {
+        ChatId chatId = new (publicMessage.SenderChatId);
+        await BotClient.SendSavedMessage(chatId, BotDbContext, publicMessage.SavedMessageId);
+        await BotClient.SendTextMessageAsync(chatId, R.ReplyForYourMessage);
+    }
+    
     /// <summary>
     /// Отправить случайное сообщение.
     /// </summary>
@@ -88,6 +107,8 @@ public class StartState : BaseDemoCratosState
         {
             Id = savedMessage.Id,
             SavedMessageId = savedMessage.Id,
+            TelegramMessageId = message.MessageId,
+            TelegramMessageThreadId = message.MessageThreadId,
             Approved = true,
             SenderChatId = Chat.ChatId.ToString(),
         };
@@ -109,10 +130,9 @@ public class StartState : BaseDemoCratosState
         await BotHelper.ExecuteFor(BotDbContext, BotConstants.BaseBotClaims.BotUserBlock, async tuple =>
         {
             await BotClient.SendSavedMessage(tuple.chat.ChatId, BotDbContext, mes.SavedMessageId);
-            await Answer(string.Format(R.NeedApprove, mes.SavedMessageId.ToString()), replyMarkup: approveDeclineInline.Build());
+            await BotClient.SendTextMessageAsync(tuple.chat.ChatId, string.Format(R.NeedApprove, mes.SavedMessageId.ToString()), replyMarkup: approveDeclineInline.Build());
         });
     }
-    
     
     private List<MessageType> GetSupportedMessageTypes() => new List<MessageType>()
     {
